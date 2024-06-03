@@ -27,8 +27,8 @@ function makeApp(database) {
 
   app.get("/data", async (req, res) => {
     try {
-      const data = await User.find();
-      res.status(200).json({ data: data });
+      const data = await database.getUserData();
+      res.status(200).json({data: data});
     } catch (error) {
       console.log(error);
     }

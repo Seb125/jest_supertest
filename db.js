@@ -21,5 +21,10 @@ function createUser(name, email, password) {
     newData.save();
 }
 
+const getUserData = async () => {
+  const userData = await User.find();
+  return userData;
+}
 
-module.exports = createUser;
+
+module.exports = { createUser, getUserData };

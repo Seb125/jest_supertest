@@ -2,9 +2,11 @@ const request = require("supertest");
 const makeApp = require("./app");
 
 const createUser = jest.fn(); // mock function with jest
+const getUserData = jest.fn();
 
 const app = makeApp({
   createUser,
+  getUserData
 });
 
 beforeAll(async () => {});
@@ -17,6 +19,19 @@ describe("GET /", () => {
     expect(res.statusCode).toEqual(200);
     expect(res.header["content-type"]).toBe("text/html; charset=UTF-8");
   });
+
+  test("should get Data of all users", async () => {
+    getUserData.mockReset()
+    getUserData.mockResolvedValue([{user1: "Seb"}, {user2: "Margo"}])
+    const res = await request(app).get("/data");
+    expect(res.statusCode).toEqual(200);
+    expect(res.header["content-type"]).toContain("application/json");
+    expect(getUserData.mock.calls.length).toBe(1);
+
+    const responseData = res.body; // Using res.body to get the parsed JSON body
+    expect(Array.isArray(responseData.data)).toBe(true);
+    expect(responseData.data).toEqual([{ user1: "Seb" }, { user2: "Margo" }]);
+  })
 });
 
 describe("POST /", () => {
