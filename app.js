@@ -12,23 +12,19 @@ function makeApp(database) {
     res.sendFile(path.join(__dirname, "index.html"));
   });
 
-  app.post("/addUser", (req, res) => {
-    const { name, email, password } = req.body;
-    database
-      .createUser(name, email, password)
-      .then((userId) => {
-        res.send({ userId });
-        console.log("Document inserted");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  app.post("/addUser", async (req, res) => {
+    const { name} = req.body;
+    const response = await database.createUser(name)
+    console.log(response);
+    //res.send({ userId });
+       
   });
 
   app.get("/data", async (req, res) => {
     try {
-      console.log("lol")
+      
       const data = await database.getUserData();
+      console.log("here");
       res.status(200).json({data: data});
     } catch (error) {
       console.log(error);

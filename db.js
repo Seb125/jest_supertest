@@ -9,16 +9,17 @@ const MONGO_URI =
 mongoose
   .connect(MONGO_URI)
   .then((x) => {
-    const databaseName = "docker"
+    const databaseName = x.connections[0].name;
     console.log(`Connected to Mongo! Database name: "${databaseName}"`);
   })
   .catch((err) => {
     console.error("Error connecting to mongo: ", err);
   });
 
-function createUser(name, email, password) {
-    const newData = new User({ name: name, email: email, password: password });
-    newData.save();
+async function createUser(name) {
+    const newData = new User({ name: name });
+    const response = await newData.save();
+    return response;
 }
 
 const getUserData = async () => {
